@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+  vars:
+      docker_compose_version: "1.29.2"
+      project_name : "WhatAMess"
+
+  tasks:
+    # Install Docker
+    - name: Install Docker
+      # become: true
+      apt:
+        name: docker.io
+        state: present
+
+    # Install Docker Compose
+    - name: Install Docker Compose
+      # become: true
+      apt:
+        name: docker-compose
+        state: present
+
+    # Copy Docker Compose file
+    - name: Copy Docker Compose file
+      copy:
+        src: docker-compose.yml
+        dest: ./
+
+
+    # Set environment variable on target machine to be fetched and used by docker containers to expose frontend to host ip
+    # The below command will create an env variable name DOCKER_HOST_IP containing the IP address 
+    - name: Set environment variable to expose ip address to the docker Containers
+      shell: export DOCKER_HOST_IP=$(ip route get 1.1.1.1 | awk '{print $7}')
+      # shell: ip route get 1.1.1.1 | awk '{print $7}'
+    #   register: ip_address
+
+    # - name: Echo the variable
+    #   shell: echo $ip_address
+
+    # - name: Set variable
+    #   set_fact:
+    #     DOCKER_HOST_IP_ADDR: "{{ ip_address.stdout }}"
+    #   environment: 
+    #     DOCKER_HOST_IP_ADDR: "{{ ip_address.stdout }}"
+
+    # Pull Docker images and Start Containers using compose file
+    - name: Run docker compose up command
+      # shell: docker-compose up
+      become: true
+      docker_compose:
+        project_src: ./
+        state: present
+        pull: yes

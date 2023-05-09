@@ -1,0 +1,44 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: prototype1
+      MYSQL_DATABASE: SpeMajor
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    ports:
+      - 3307:3306
+    networks:
+      - backend-net
+
+  backend:
+    image: kayrohit/whatamess-backend:test2
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/SpeMajor?useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: prototype1
+    ports:
+      - 5000:5000
+    networks:
+      - backend-net
+    depends_on:
+      - mysql
+      
+  frontend:
+    image: kayrohit/whatamess-frontend
+    network_mode: host
+    environment:
+      HOST_IP: ${DOCKER_HOST_IP}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+
+
+volumes:
+  mysql-volume:
+
+
+networks:
+  backend-net:

@@ -25,6 +25,7 @@ function HomeScreen({ navigation }) {
     latitude: "",
     longitude: "",
   });
+  const [load, setLoad] = useState(false);
 
   useEffect(() => {
     // (async() => {
@@ -49,10 +50,11 @@ function HomeScreen({ navigation }) {
       await Location.getCurrentPositionAsync({})
         .then((loc) => {
           setCurrLoc(loc);
+          setLoad(true);
         })
         .catch((err) => console.log(err));
     })();
-  }, []);
+  }, [load]);
 
   //list of all mess
   const getMessList = async () => {
@@ -120,7 +122,7 @@ function HomeScreen({ navigation }) {
               }
             })
             .map((messDetails, index) => {
-              const addr = messDetails.address;
+              const addr = messDetails?.address;
               const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                 addr
               )}`;
@@ -150,9 +152,9 @@ function HomeScreen({ navigation }) {
                     </Card.Content>
                     <Card.Actions className="mt-2">
                       <Chip icon="map-marker" onPress={() => openMaps(mapsUrl)}>
-                        {messDetails.distance < 1
+                        {messDetails?.distance < 1
                           ? `less than a km away`
-                          : `${messDetails.distance} km away`}
+                          : `${messDetails?.distance} km away`}
                       </Chip>
                     </Card.Actions>
                     <Button
@@ -170,13 +172,15 @@ function HomeScreen({ navigation }) {
             })}
         </View>
       </ScrollView>
-      <View className="items-end mb-2 mr-2">
+      {
+        (load) ? (<View className="items-end mb-2 mr-2">
         <FAB
           icon="map-search-outline"
           label="Get mess"
           onPress={() => getMessList()}
         />
-      </View>
+      </View>) : null
+      }
     </View>
   );
 }

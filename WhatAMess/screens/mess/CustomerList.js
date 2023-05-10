@@ -1,28 +1,29 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from "../../context/userContext";
 import axios from 'axios';
 import { baseUrl } from '../../assets/URL';
 import { FlashAuto } from '@mui/icons-material';
-import { View,Text, StyleSheet,FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { FAB } from 'react-native-paper';
 
-const Item = ({firstname,lastname,phone,email}) => {
-  
-  return( 
+const Item = ({ firstname, lastname, phone, email }) => {
+
+  return (
     <View style={styles.item}>
       {/* <Text variant="medium"><Icon name="email" /> name: {firstname} {lastname}</Text>
       <Text>e-mail: {email}</Text>
       <Text>Phone: {phone}</Text> */}
       <Text variant="titleMedium" style={styles.text}>
-              <Icon name="person" /> Full Name - {firstname}{" "}{lastname}
+        <Icon name="person" /> Full Name - {firstname}{" "}{lastname}
       </Text>
 
       <Text variant="titleMedium" style={styles.text}>
-              <Icon name="email" /> e-mail - {email}
+        <Icon name="email" /> e-mail - {email}
       </Text>
 
       <Text variant="titleMedium" style={styles.text}>
-              <Icon name="phone" /> Phone - {phone}
+        <Icon name="phone" /> Phone - {phone}
       </Text>
     </View>
   );
@@ -32,14 +33,14 @@ const Item = ({firstname,lastname,phone,email}) => {
 
 function CustomerList() {
   const { globalState, setGlobalState } = useContext(GlobalContext);
-  const [List,setList] = useState([]);
-  const [user,setUser] =useState(null);
-  const [loading,setLoading] =useState(true);
-  
+  const [List, setList] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  
-  
-  
+
+
+
+
   const getList = async () => {
     console.log("Hello in axios")
     await axios
@@ -50,17 +51,16 @@ function CustomerList() {
         },
       })
       .then((res) => {
-        console.log("Res",res.data);
-        setList(res.data );
-        console.log("After retrieving")
-        
+        console.log("Res", res.data);
+        setList(res.data);
+        setLoading(false)
       })
       .catch((err) => console.log(err))
-    await fetch()
-    .then(response => response.json())
-   .then((json)=>setList(json))
-   .catch((error)=>console.log(error))
-   .finally(()=> setLoading(false))
+    // await fetch()
+    //   .then(response => response.json())
+    //   .then((json) => setList(json))
+    //   .catch((error) => console.log(error))
+    //   .finally(() => setLoading(false))
   };
 
   useEffect(() => {
@@ -68,24 +68,33 @@ function CustomerList() {
     getList();
   }, []);
 
-  
+
   // console.log("List",List.body.customers[0].username);
-  const renderItem = ({item})=>( 
-    <Item firstname={item.firstname} lastname={item.lastname} phone={item.phone} email={item.email}/>
+  const renderItem = ({ item }) => (
+    <Item firstname={item.firstname} lastname={item.lastname} phone={item.phone} email={item.email} />
   );
   return (
     <View>
-      {loading ? (<Text>Loadingg...</Text>) :(
-      <View style={styles.container}>
-        <Text style={{textAlign:'center',fontSize:20,fontWeight:'bold'}}>Customer List</Text>
-      <FlatList
-       data={List.body.customers}
-       renderItem={renderItem}
-       keyExtractor={item => item.id}
-    />
-    
-    </View>
-      ) }
+      <View className="items-end mb-2 mr-2">
+        <FAB
+          icon="refresh"
+          label="Refresh"
+          onPress={() => {
+            getList();
+          }}
+        />
+      </View>
+      {loading ? (<Text>Loadingg...</Text>) : (
+        <View style={styles.container}>
+          <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Customer List</Text>
+          <FlatList
+            data={List.body.customers}
+            renderItem={renderItem}
+            keyExtractor={item => item.username}
+          />
+
+        </View>
+      )}
     </View>
   );
 }
@@ -93,18 +102,18 @@ function CustomerList() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop:30,
-    padding:2,
+    marginTop: 30,
+    padding: 2,
   },
   item: {
     backgroundColor: '#f5f520',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
-    
+
   },
   text: {
-    fontSize:18
+    fontSize: 18
   },
 });
 export default CustomerList;

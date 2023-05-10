@@ -1,4 +1,4 @@
-import { View, Text, TextInput, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import React, { useContext, useState } from 'react';
 import Card from './Form/Card';
 import Icon from "react-native-vector-icons/Ionicons";
@@ -6,7 +6,7 @@ import { GlobalContext } from "../../context/userContext";
 import axios from 'axios';
 import { baseUrl } from '../../assets/URL';
 
-function UpdateMenu() {
+function UpdateMenu({navigation}) {
   const [data, setData] = useState([{ day: '', breakfast: '', lunch: '', dinner: '' }]);
   const { globalState, setGlobalState } = useContext(GlobalContext);
   const [visible, setVisible] = useState(false);
@@ -27,7 +27,7 @@ function UpdateMenu() {
         item.day = txt;
       }
     });
-    console.log(temp);
+    // console.log(temp);
     setData(temp);
   };
 
@@ -38,7 +38,7 @@ function UpdateMenu() {
         item.breakfast = txt;
       }
     });
-    console.log(temp);
+    // console.log(temp);
     setData(temp);
   };
 
@@ -49,7 +49,7 @@ function UpdateMenu() {
         item.lunch = txt;
       }
     });
-    console.log(temp);
+    // console.log(temp);
     setData(temp);
   };
 
@@ -61,7 +61,7 @@ function UpdateMenu() {
         item.dinner = txt;
       }
     });
-    console.log(temp);
+    // console.log(temp);
     setData(temp);
   };
 
@@ -74,7 +74,20 @@ function UpdateMenu() {
         },
       })
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
+        Alert.alert(
+          "Successful",
+          `${res.data}`,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                //  setData([{ day: '', breakfast: '', lunch: '', dinner: '' }]);
+                navigation.navigate("Home");
+              },
+            },
+          ]
+        );
         
       })
       .catch((err) => console.log(err));

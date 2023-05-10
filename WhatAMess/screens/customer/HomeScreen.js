@@ -50,11 +50,10 @@ function HomeScreen({ navigation }) {
       await Location.getCurrentPositionAsync({})
         .then((loc) => {
           setCurrLoc(loc);
-          setLoad(true);
         })
         .catch((err) => console.log(err));
     })();
-  }, [load]);
+  }, []);
 
   //list of all mess
   const getMessList = async () => {
@@ -74,18 +73,18 @@ function HomeScreen({ navigation }) {
 
   //this new messList object stores distances as well as mess details
   const newMessList = messList?.map((mess) =>
-    //this is appending  new variable to the messList object, i.e. distance
-    ({
-      ...mess,
-      distance:
-        getDistance(
-          {
-            latitude: currLoc?.coords.latitude,
-            longitude: currLoc?.coords.longitude,
-          },
-          { latitude: mess?.latitude, longitude: mess?.longitude }
-        ) * 0.0001,
-    })
+  //this is appending  new variable to the messList object, i.e. distance
+  ({
+    ...mess,
+    distance:
+      getDistance(
+        {
+          latitude: currLoc?.coords.latitude,
+          longitude: currLoc?.coords.longitude,
+        },
+        { latitude: mess?.latitude, longitude: mess?.longitude }
+      ) * 0.0001,
+  })
   );
 
   const openMaps = async (mapsUrl) => {
@@ -172,15 +171,13 @@ function HomeScreen({ navigation }) {
             })}
         </View>
       </ScrollView>
-      {
-        (load) ? (<View className="items-end mb-2 mr-2">
+      <View className="items-end mb-2 mr-2">
         <FAB
           icon="map-search-outline"
           label="Get mess"
           onPress={() => getMessList()}
         />
-      </View>) : null
-      }
+      </View>
     </View>
   );
 }

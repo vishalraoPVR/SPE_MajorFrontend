@@ -132,8 +132,7 @@ function ProfileScreen({ navigation }) {
           </View>
         </SafeAreaView>
       )}
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop:"2%" }}>
-
+      <View className="items-end mb-2 mr-2">
         <Button title='Log-Out' onPress={async () => {
           try {
             await AsyncStorage.removeItem('logged-in-user');

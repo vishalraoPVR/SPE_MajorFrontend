@@ -3,8 +3,8 @@ services:
   mysql:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: prototype1
-      MYSQL_DATABASE: SpeMajor
+      MYSQL_ROOT_PASSWORD: ${PASSWORD}
+      MYSQL_DATABASE: ${DATABASE}
     volumes:
       - mysql-volume:/var/lib/mysql
     ports:
@@ -17,7 +17,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/SpeMajor?useSSL=false
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: prototype1
+      SPRING_DATASOURCE_PASSWORD: ${PASSWORD}
     ports:
       - 5000:5000
     networks:

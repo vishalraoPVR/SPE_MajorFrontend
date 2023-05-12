@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useState, useRef } from "react";
+import ForgetPassword from "./ForgetPassword";
 import LoginScreen from "./LoginScreen";
 import RegistrationScreen from "./RegistrationScreen";
 
@@ -14,6 +15,10 @@ export default function LoginRegistrationStackScreen({ navigation }) {
         <RegistrationStack.Screen
           name="Registration"
           component={RegistrationScreen}
+        />
+        <RegistrationStack.Screen
+          name="ForgetPassword"
+          component={ForgetPassword}
         />
       </RegistrationStack.Navigator>
     </>

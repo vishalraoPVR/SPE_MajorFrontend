@@ -1,9 +1,11 @@
-import { View, Text, Pressable, Alert, Platform } from "react-native";
+import { View, Text, Pressable, Alert, Platform, Modal } from "react-native";
 import React, { useState, useRef, useContext } from "react";
 import axios from "axios";
 import { Form, FormItem } from "react-native-form-component";
 import { baseUrl } from "../assets/URL";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FAIcon from "react-native-vector-icons/FontAwesome";
+
 
 import { GlobalContext } from "../context/userContext";
 
@@ -16,15 +18,15 @@ function LoginScreen({ navigation }) {
     password: "",
   });
   const credentialInput = useRef();
-
   return (
+    <>
     <View className="flex-1 justify-center p-5">
       <Form
         buttonText="Login"
         //api call here
         onButtonPress={async () => {
           await axios
-            .post(`${baseUrl}/authenticate`, {
+          .post(`${baseUrl}/authenticate`, {
               ...credentials,
             })
             .then((res) => {
@@ -49,24 +51,24 @@ function LoginScreen({ navigation }) {
                 `${res.data.role} :- ${res.data.username}`,
                 [
                   // {
-                  //   text: 'Cancel',
-                  //   style: 'cancel',
-                  // },
-                  {
-                    text: "Thanks",
-                    onPress: () => {
-                      if (res.data.role === "CUSTOMER")
+                    //   text: 'Cancel',
+                    //   style: 'cancel',
+                    // },
+                    {
+                      text: "Thanks",
+                      onPress: () => {
+                        if (res.data.role === "CUSTOMER")
                         // nav.navigate('CustomerScreen');
                         setGlobalState({ ...res.data, isLoggedIn: true });
-                      // nav.navigate('MessOwnerScreen');
-                      else setGlobalState({ ...res.data, isLoggedIn: true });
+                        // nav.navigate('MessOwnerScreen');
+                        else setGlobalState({ ...res.data, isLoggedIn: true });
+                      },
                     },
-                  },
-                ]
-              );
-            })
-            .catch((err) => {
-              console.log(err);
+                  ]
+                  );
+                })
+                .catch((err) => {
+                  console.log(err);
               Alert.alert("Oops!", `Check you credentials.`, [{ text: "OK" }]);
             });
         }}
@@ -78,7 +80,7 @@ function LoginScreen({ navigation }) {
           onChangeText={(i) => setcredentials({ ...credentials, username: i })}
           asterik
           ref={credentialInput}
-        />
+          />
         <FormItem
           label="Password"
           isRequired
@@ -86,15 +88,27 @@ function LoginScreen({ navigation }) {
           onChangeText={(i) => setcredentials({ ...credentials, password: i })}
           asterik
           ref={credentialInput}
-        />
+          />
+        <Pressable
+          onPress={() => navigation.navigate("ForgetPassword")}
+          style={{ alignItems: "center" }}
+          >
+          <Text>Forgot Password?</Text>
+        </Pressable>
       </Form>
+
       <Pressable
         onPress={() => navigation.navigate("Registration")}
         style={{ alignItems: "center" }}
-      >
+        >
         <Text>Register?</Text>
       </Pressable>
+
+      {/* Implementing forgot password */}
+
+
     </View>
+        </>
   );
 }
 
